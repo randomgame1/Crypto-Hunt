@@ -1,7 +1,7 @@
 // Get canvas and its context
 const canvas = document.getElementById('gameCanvas');
-canvas.width = 600;
-canvas.height = 400;
+canvas.width = 700;
+canvas.height = 500;
 const ctx = canvas.getContext('2d');
 
 // Global game variables and UI elements
@@ -84,24 +84,6 @@ badCryptoFilenames.forEach(filename => {
   });
 });
 
-// Populate the crypto sidebar with the list of cryptos
-function populateCryptoList() {
-  const goodList = document.getElementById('goodCryptoList');
-  const badList = document.getElementById('badCryptoList');
-  goodList.innerHTML = '';
-  goodCryptoImages.forEach(item => {
-    goodList.innerHTML += `<div class="cryptoItem">
-      <img src="${item.image.src}" alt="${item.name}"><span>${item.name}</span>
-    </div>`;
-  });
-  badList.innerHTML = '';
-  badCryptoImages.forEach(item => {
-    badList.innerHTML += `<div class="cryptoItem">
-      <img src="${item.image.src}" alt="${item.name}"><span>${item.name}</span>
-    </div>`;
-  });
-}
-
 // Crypto objects and level initialization
 let cryptos = [];
 
@@ -169,7 +151,6 @@ function initGame() {
   player.dy = 0;
   
   initLevel();
-  populateCryptoList();
   
   scoreDiv.innerText = `Score: ${score}   Level: ${level}`;
   lastCollectedDiv.innerText = `Last Collected: ${lastCollectedCrypto}`;
