@@ -3,7 +3,7 @@ const canvas = document.getElementById('gameCanvas');
 canvas.width = 700;
 canvas.height = 500;
 const ctx = canvas.getContext('2d');
-ctx.imageSmoothingEnabled = true; // Ensures smoother images
+ctx.imageSmoothingEnabled = true; // Smoother images
 
 // Global game variables and UI elements
 let score = 0;
@@ -57,14 +57,11 @@ const badCryptoFilenames = [
 const goodCryptoImages = [];
 const badCryptoImages = [];
 
-// Helper function: convert filename to formatted name
+// Helper: convert filename to formatted name
 function formatName(filename) {
   let name = filename.split('.')[0];
   name = name.replace(/-/g, ' ');
-  name = name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  name = name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   return name;
 }
 
@@ -72,20 +69,14 @@ function formatName(filename) {
 goodCryptoFilenames.forEach(filename => {
   const img = new Image();
   img.src = `images/goodCryptoImages/${filename}`;
-  goodCryptoImages.push({
-    image: img,
-    name: formatName(filename)
-  });
+  goodCryptoImages.push({ image: img, name: formatName(filename) });
 });
 
 // Preload bad crypto images
 badCryptoFilenames.forEach(filename => {
   const img = new Image();
   img.src = `images/badCryptoImages/${filename}`;
-  badCryptoImages.push({
-    image: img,
-    name: formatName(filename)
-  });
+  badCryptoImages.push({ image: img, name: formatName(filename) });
 });
 
 // Array to hold crypto objects
@@ -108,11 +99,9 @@ function getRandomPositionAwayFromPlayer(size) {
 function createCrypto(x, y, type) {
   let cryptoAsset;
   if (type === 'good') {
-    cryptoAsset =
-      goodCryptoImages[Math.floor(Math.random() * goodCryptoImages.length)];
+    cryptoAsset = goodCryptoImages[Math.floor(Math.random() * goodCryptoImages.length)];
   } else if (type === 'bad') {
-    cryptoAsset =
-      badCryptoImages[Math.floor(Math.random() * badCryptoImages.length)];
+    cryptoAsset = badCryptoImages[Math.floor(Math.random() * badCryptoImages.length)];
   }
   let angle = Math.random() * Math.PI * 2;
   let baseSpeed = 0.5 + Math.random();
@@ -129,7 +118,7 @@ function createCrypto(x, y, type) {
   };
 }
 
-// Initialize a level by spawning 6 good and 7 bad cryptos.
+// Initialize level: spawn 6 good and 7 bad cryptos.
 function initLevel() {
   cryptos = [];
   for (let i = 0; i < 6; i++) {
@@ -150,14 +139,14 @@ function initGame() {
   gameOver = false;
   lastCollectedCrypto = 'None';
   lastBadCrypto = 'None';
-
+  
   player.x = 20;
   player.y = 20;
   player.dx = 0;
   player.dy = 0;
-
+  
   initLevel();
-
+  
   scoreDiv.innerText = `Score: ${score}   Level: ${level}`;
   lastCollectedDiv.innerText = `Last Collected: ${lastCollectedCrypto}`;
   gameOverMessageDiv.innerHTML = '';
@@ -202,7 +191,7 @@ function drawCryptos() {
         crypto.size * 2
       );
     } else {
-      // Fallback: draw a simple colored circle
+      // Fallback: draw a circle if the image isn't loaded
       ctx.beginPath();
       ctx.arc(crypto.x, crypto.y, crypto.size, 0, Math.PI * 2);
       ctx.fillStyle = crypto.type === 'good' ? 'green' : 'red';
@@ -217,10 +206,8 @@ function updatePlayer() {
   player.y += player.dy;
   if (player.x < 0) player.x = 0;
   if (player.y < 0) player.y = 0;
-  if (player.x + player.width > canvas.width)
-    player.x = canvas.width - player.width;
-  if (player.y + player.height > canvas.height)
-    player.y = canvas.height - player.height;
+  if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+  if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
 }
 
 function updateCrypto(crypto) {
@@ -279,23 +266,14 @@ function handleGameOver() {
 
 // Input handling
 function keyDownHandler(e) {
-  if (e.key === 'ArrowRight') {
-    player.dx = player.speed;
-  } else if (e.key === 'ArrowLeft') {
-    player.dx = -player.speed;
-  } else if (e.key === 'ArrowUp') {
-    player.dy = -player.speed;
-  } else if (e.key === 'ArrowDown') {
-    player.dy = player.speed;
-  }
+  if (e.key === 'ArrowRight') { player.dx = player.speed; }
+  else if (e.key === 'ArrowLeft') { player.dx = -player.speed; }
+  else if (e.key === 'ArrowUp') { player.dy = -player.speed; }
+  else if (e.key === 'ArrowDown') { player.dy = player.speed; }
 }
 function keyUpHandler(e) {
-  if (['ArrowRight', 'ArrowLeft'].includes(e.key)) {
-    player.dx = 0;
-  }
-  if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
-    player.dy = 0;
-  }
+  if (['ArrowRight', 'ArrowLeft'].includes(e.key)) { player.dx = 0; }
+  if (['ArrowUp', 'ArrowDown'].includes(e.key)) { player.dy = 0; }
 }
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
@@ -310,6 +288,7 @@ function update() {
     handleGameOver();
     return;
   }
+  
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBackground();
   updatePlayer();
@@ -318,6 +297,7 @@ function update() {
   drawPlayer();
   drawCryptos();
   updateUI();
+  
   requestAnimationFrame(update);
 }
 
@@ -330,6 +310,6 @@ window.onload = function () {
 // Restart button listener
 restartButton.addEventListener('click', () => {
   initGame();
-  // Start a new game loop
+  gameOverMessageDiv.innerHTML = '';
   update();
 });
