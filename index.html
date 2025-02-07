@@ -8,23 +8,32 @@
     html, body {
       margin: 0;
       padding: 0;
+      overflow: hidden; /* no scrolling */
+      width: 100%;
       height: 100%;
-      overflow: hidden;
       background: #f0f0f0;
       font-family: Arial, sans-serif;
     }
     h1 {
       text-align: center;
-      margin-top: 10px;
+      margin: 10px 0;
     }
-    /* Game container centered on the page */
+    /* The mainWrapper contains both the game container and UI; its base size is fixed */
+    #mainWrapper {
+      position: absolute;
+      width: 700px;
+      height: 600px; /* 500px for canvas + 100px for UI */
+      left: 50%;
+      top: 50%;
+      transform-origin: top left;
+    }
+    /* Game container */
     #gameContainer {
       position: relative;
       width: 700px;
       height: 500px;
       background: #fff;
       border: 1px solid #ccc;
-      margin: 0 auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     canvas {
@@ -32,7 +41,7 @@
       height: 100%;
       display: block;
     }
-    /* Restart button positioned in the center of the canvas */
+    /* Restart button centered over the canvas */
     #restartButton {
       position: absolute;
       left: 50%;
@@ -46,13 +55,14 @@
       display: none;
       z-index: 10;
     }
-    /* UI container below the game container */
+    /* UI container */
     #uiContainer {
       width: 700px;
-      margin: 10px auto;
+      height: 100px;
       text-align: center;
+      margin-top: 10px;
     }
-    #score, #lastCollected {
+    #score, #lastCollected, #gameOverMessage {
       font-size: 18px;
       margin: 5px 0;
     }
@@ -60,26 +70,39 @@
       font-size: 24px;
       font-weight: bold;
       color: red;
-      margin: 10px 0;
-    }
-    @media (max-width: 800px) {
-      #gameContainer, #uiContainer {
-        width: 90%;
-      }
     }
   </style>
 </head>
 <body>
   <h1>Crypto Hunt</h1>
-  <div id="gameContainer">
-    <canvas id="gameCanvas" width="700" height="500"></canvas>
-    <button id="restartButton">Restart</button>
-  </div>
-  <div id="uiContainer">
-    <div id="score">Score: 0   Level: 1</div>
-    <div id="lastCollected">Last Collected: None</div>
-    <div id="gameOverMessage"></div>
+  <div id="mainWrapper">
+    <div id="gameContainer">
+      <canvas id="gameCanvas" width="700" height="500"></canvas>
+      <button id="restartButton">Restart</button>
+    </div>
+    <div id="uiContainer">
+      <div id="score">Score: 0   Level: 1</div>
+      <div id="lastCollected">Last Collected: None</div>
+      <div id="gameOverMessage"></div>
+    </div>
   </div>
   <script src="script.js"></script>
+  <script>
+    // Dynamically scale the mainWrapper to fit the viewport
+    function resizeGame() {
+      const mainWrapper = document.getElementById('mainWrapper');
+      const desiredWidth = 700;
+      const desiredHeight = 600; // Total height (canvas + UI)
+      const scale = Math.min(window.innerWidth / desiredWidth, window.innerHeight / desiredHeight);
+      mainWrapper.style.transform = 'scale(' + scale + ')';
+      // Center the mainWrapper
+      const left = (window.innerWidth - desiredWidth * scale) / 2;
+      const top = (window.innerHeight - desiredHeight * scale) / 2;
+      mainWrapper.style.left = left + 'px';
+      mainWrapper.style.top = top + 'px';
+    }
+    window.addEventListener('resize', resizeGame);
+    window.addEventListener('load', resizeGame);
+  </script>
 </body>
 </html>
