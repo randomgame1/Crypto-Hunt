@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Hunt</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 10px;
+    }
+    /* Main container holds the game canvas and sidebar */
+    #mainContainer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin-top: 10px;
+    }
+    /* Game container with canvas */
+    #gameContainer {
+      position: relative;
+      width: 800px;
+      height: 600px;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+    canvas {
+      width: 800px;
+      height: 600px;
+      display: block;
+    }
+    /* Sidebar for the crypto legend */
+    #sidebar {
+      width: 200px;
+      margin-left: 10px;
+      background: #ddd;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #sidebar h3 {
+      margin-top: 0;
+    }
+    .cryptoItem {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .cryptoItem img {
+      width: 30px;
+      height: 30px;
+      margin-right: 5px;
+    }
+    /* UI container below the main container for score and last collected info */
+    #uiContainer {
+      width: 700px;
+      margin: 10px auto;
+      text-align: center;
+    }
+    #score, #lastCollected {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+    /* Game over message styling in UI container */
+    #gameOverMessage {
+      font-size: 24px;
+      font-weight: bold;
+      color: red;
+      margin: 10px 0;
+    }
+    /* Restart button positioned in the middle of the game container */
+    #restartButton {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px 20px;
+      font-size: 18px;
+      display: none;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <h1>Crypto Hunt</h1>
+  <div id="mainContainer">
+    <div id="gameContainer">
+      <canvas id="gameCanvas" width="700" height="500"></canvas>
+      <button id="restartButton">Restart</button>
+    </div>
+    <div id="sidebar">
+      <h3>Good Cryptos</h3>
+      <div id="goodCryptoList"></div>
+      <h3>Bad Cryptos</h3>
+      <div id="badCryptoList"></div>
+    </div>
+  </div>
+  <div id="uiContainer">
+    <div id="score">Score: 0   Level: 1</div>
+    <div id="lastCollected">Last Collected: None</div>
+    <div id="gameOverMessage"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
