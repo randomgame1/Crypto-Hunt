@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crypto Hunt</title>
   <style>
-    /* Reset default margins, set a light background, and use a clean font */
     html, body {
       margin: 0;
       padding: 0;
@@ -16,22 +15,16 @@
     }
     h1 {
       text-align: center;
-      margin: 10px 0;
+      margin-top: 10px;
     }
-    /* Main container: displays the game container and sidebar side by side */
-    #mainContainer {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      margin: 10px;
-    }
-    /* Game container with canvas and restart button */
+    /* Game container centered on the page */
     #gameContainer {
       position: relative;
       width: 700px;
       height: 500px;
       background: #fff;
       border: 1px solid #ccc;
+      margin: 0 auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     canvas {
@@ -39,7 +32,7 @@
       height: 100%;
       display: block;
     }
-    /* Restart button centered over the canvas */
+    /* Restart button positioned in the center of the canvas */
     #restartButton {
       position: absolute;
       left: 50%;
@@ -53,33 +46,7 @@
       display: none;
       z-index: 10;
     }
-    /* Sidebar for the crypto legend */
-    #sidebar {
-      width: 200px;
-      margin-left: 20px;
-      background: #ddd;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      max-height: 500px;
-      overflow-y: auto;
-    }
-    #sidebar h3 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .cryptoItem {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .cryptoItem img {
-      width: 30px;
-      height: 30px;
-      margin-right: 8px;
-    }
-    /* UI container below the main container for score, level, and game messages */
+    /* UI container below the game container */
     #uiContainer {
       width: 700px;
       margin: 10px auto;
@@ -95,19 +62,8 @@
       color: red;
       margin: 10px 0;
     }
-    /* Responsive adjustments: On smaller screens, stack the sidebar below the game container */
-    @media (max-width: 1000px) {
-      #mainContainer {
-        flex-direction: column;
-        align-items: center;
-      }
-      #sidebar {
-        width: 90%;
-        margin-left: 0;
-        margin-top: 20px;
-        max-height: none;
-      }
-      #uiContainer {
+    @media (max-width: 800px) {
+      #gameContainer, #uiContainer {
         width: 90%;
       }
     }
@@ -115,17 +71,9 @@
 </head>
 <body>
   <h1>Crypto Hunt</h1>
-  <div id="mainContainer">
-    <div id="gameContainer">
-      <canvas id="gameCanvas" width="700" height="500"></canvas>
-      <button id="restartButton">Restart</button>
-    </div>
-    <div id="sidebar">
-      <h3>Good Cryptos</h3>
-      <div id="goodCryptoList"></div>
-      <h3>Bad Cryptos</h3>
-      <div id="badCryptoList"></div>
-    </div>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="700" height="500"></canvas>
+    <button id="restartButton">Restart</button>
   </div>
   <div id="uiContainer">
     <div id="score">Score: 0   Level: 1</div>
