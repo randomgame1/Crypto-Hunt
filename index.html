@@ -8,7 +8,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden; /* no scrolling */
+      overflow: hidden;
       width: 100%;
       height: 100%;
       background: #f0f0f0;
@@ -18,34 +18,62 @@
       text-align: center;
       margin: 10px 0;
     }
-    /* The mainWrapper contains both the game container and UI; its base size is fixed */
-    #mainWrapper {
-      position: absolute;
-      width: 700px;
-      height: 600px; /* 500px for canvas + 100px for UI */
-      left: 50%;
-      top: 50%;
-      transform-origin: top left;
-    }
-    /* Game container */
+    /* Game container with fixed size, centered on the page */
     #gameContainer {
       position: relative;
       width: 700px;
       height: 500px;
       background: #fff;
       border: 1px solid #ccc;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     canvas {
       width: 100%;
       height: 100%;
       display: block;
     }
-    /* Restart button centered over the canvas */
+    /* UI overlays on the game canvas */
+    #scoreOverlay {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 18px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    #lastCollectedOverlay {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 18px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    #gameOverOverlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      font-size: 24px;
+      font-weight: bold;
+      color: red;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+      z-index: 5;
+    }
+    /* Restart button centered in the container, below the game over message */
     #restartButton {
       position: absolute;
+      top: 70%;
       left: 50%;
-      top: 50%;
       transform: translate(-50%, -50%);
       padding: 10px 20px;
       font-size: 18px;
@@ -55,54 +83,25 @@
       display: none;
       z-index: 10;
     }
-    /* UI container */
-    #uiContainer {
-      width: 700px;
-      height: 100px;
-      text-align: center;
-      margin-top: 10px;
-    }
-    #score, #lastCollected, #gameOverMessage {
-      font-size: 18px;
-      margin: 5px 0;
-    }
-    #gameOverMessage {
-      font-size: 24px;
-      font-weight: bold;
-      color: red;
+    /* Optional responsive scaling */
+    @media (max-width: 800px) {
+      #gameContainer {
+        width: 90%;
+        height: auto;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Crypto Hunt</h1>
-  <div id="mainWrapper">
-    <div id="gameContainer">
-      <canvas id="gameCanvas" width="700" height="500"></canvas>
-      <button id="restartButton">Restart</button>
-    </div>
-    <div id="uiContainer">
-      <div id="score">Score: 0   Level: 1</div>
-      <div id="lastCollected">Last Collected: None</div>
-      <div id="gameOverMessage"></div>
-    </div>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="700" height="500"></canvas>
+    <!-- UI Overlays within the game container -->
+    <div id="scoreOverlay">Score: 0 | Level: 1</div>
+    <div id="lastCollectedOverlay">Last Collected: None</div>
+    <div id="gameOverOverlay"></div>
+    <button id="restartButton">Restart</button>
   </div>
   <script src="script.js"></script>
-  <script>
-    // Dynamically scale the mainWrapper to fit the viewport
-    function resizeGame() {
-      const mainWrapper = document.getElementById('mainWrapper');
-      const desiredWidth = 700;
-      const desiredHeight = 600; // Total height (canvas + UI)
-      const scale = Math.min(window.innerWidth / desiredWidth, window.innerHeight / desiredHeight);
-      mainWrapper.style.transform = 'scale(' + scale + ')';
-      // Center the mainWrapper
-      const left = (window.innerWidth - desiredWidth * scale) / 2;
-      const top = (window.innerHeight - desiredHeight * scale) / 2;
-      mainWrapper.style.left = left + 'px';
-      mainWrapper.style.top = top + 'px';
-    }
-    window.addEventListener('resize', resizeGame);
-    window.addEventListener('load', resizeGame);
-  </script>
 </body>
 </html>
