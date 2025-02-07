@@ -3,9 +3,9 @@ const canvas = document.getElementById('gameCanvas');
 canvas.width = 700;
 canvas.height = 500;
 const ctx = canvas.getContext('2d');
-ctx.imageSmoothingEnabled = true; // Smoother images
+ctx.imageSmoothingEnabled = true; // Enable smoother images
 
-// Global game variables and UI elements
+// Global game variables
 let score = 0;
 let level = 1;
 let speedMultiplier = 1;
@@ -13,9 +13,10 @@ let gameOver = false;
 let lastCollectedCrypto = 'None';
 let lastBadCrypto = 'None';
 
-const scoreDiv = document.getElementById('score');
-const lastCollectedDiv = document.getElementById('lastCollected');
-const gameOverMessageDiv = document.getElementById('gameOverMessage');
+// Get UI overlay elements from the game container
+const scoreOverlay = document.getElementById('scoreOverlay');
+const lastCollectedOverlay = document.getElementById('lastCollectedOverlay');
+const gameOverOverlay = document.getElementById('gameOverOverlay');
 const restartButton = document.getElementById('restartButton');
 
 // Player definition; drawn using a custom image if available
@@ -57,11 +58,14 @@ const badCryptoFilenames = [
 const goodCryptoImages = [];
 const badCryptoImages = [];
 
-// Helper: convert filename to formatted name
+// Helper: Convert filename to formatted name
 function formatName(filename) {
   let name = filename.split('.')[0];
   name = name.replace(/-/g, ' ');
-  name = name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  name = name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
   return name;
 }
 
@@ -118,7 +122,7 @@ function createCrypto(x, y, type) {
   };
 }
 
-// Initialize level: spawn 6 good and 7 bad cryptos.
+// Initialize a level by spawning 6 good and 7 bad cryptos.
 function initLevel() {
   cryptos = [];
   for (let i = 0; i < 6; i++) {
@@ -147,14 +151,13 @@ function initGame() {
   
   initLevel();
   
-  scoreDiv.innerText = `Score: ${score}   Level: ${level}`;
-  lastCollectedDiv.innerText = `Last Collected: ${lastCollectedCrypto}`;
-  gameOverMessageDiv.innerHTML = '';
+  updateOverlays();
+  gameOverOverlay.style.display = 'none';
   restartButton.style.display = 'none';
   console.log('Game initialized');
 }
 
-// Level up: increase level, raise speed, and reinitialize cryptos.
+// Level up: Increase level, raise speed, and reinitialize cryptos.
 function levelUp() {
   level++;
   speedMultiplier += 0.2;
@@ -191,7 +194,7 @@ function drawCryptos() {
         crypto.size * 2
       );
     } else {
-      // Fallback: draw a circle if the image isn't loaded
+      // Fallback: Draw a colored circle if the image isn't loaded
       ctx.beginPath();
       ctx.arc(crypto.x, crypto.y, crypto.size, 0, Math.PI * 2);
       ctx.fillStyle = crypto.type === 'good' ? 'green' : 'red';
@@ -249,34 +252,18 @@ function checkCollisions() {
   }
 }
 
-// UI update
-function updateUI() {
-  scoreDiv.innerText = `Score: ${score}   Level: ${level}`;
-  lastCollectedDiv.innerText = `Last Collected: ${lastCollectedCrypto}`;
+// Update the overlay UI elements
+function updateOverlays() {
+  scoreOverlay.innerText = `Score: ${score} | Level: ${level}`;
+  lastCollectedOverlay.innerText = `Last Collected: ${lastCollectedCrypto}`;
 }
 
-// When game over, update the UI to show final score and wrong crypto collected.
+// When game over, update the overlay to show final score and wrong crypto collected.
 function handleGameOver() {
-  gameOverMessageDiv.innerHTML = `<div>
-    Game Over! Your score: ${score}<br>
-    Wrong Crypto collected: ${lastBadCrypto}
-  </div>`;
+  gameOverOverlay.innerHTML = `Game Over! Your score: ${score}<br>Wrong Crypto collected: ${lastBadCrypto}`;
+  gameOverOverlay.style.display = 'block';
   restartButton.style.display = 'inline-block';
 }
-
-// Input handling
-function keyDownHandler(e) {
-  if (e.key === 'ArrowRight') { player.dx = player.speed; }
-  else if (e.key === 'ArrowLeft') { player.dx = -player.speed; }
-  else if (e.key === 'ArrowUp') { player.dy = -player.speed; }
-  else if (e.key === 'ArrowDown') { player.dy = player.speed; }
-}
-function keyUpHandler(e) {
-  if (['ArrowRight', 'ArrowLeft'].includes(e.key)) { player.dx = 0; }
-  if (['ArrowUp', 'ArrowDown'].includes(e.key)) { player.dy = 0; }
-}
-document.addEventListener('keydown', keyDownHandler);
-document.addEventListener('keyup', keyUpHandler);
 
 // Main game loop
 function update() {
@@ -296,10 +283,33 @@ function update() {
   checkCollisions();
   drawPlayer();
   drawCryptos();
-  updateUI();
+  updateOverlays();
   
   requestAnimationFrame(update);
 }
+
+// Input handling
+function keyDownHandler(e) {
+  if (e.key === 'ArrowRight') {
+    player.dx = player.speed;
+  } else if (e.key === 'ArrowLeft') {
+    player.dx = -player.speed;
+  } else if (e.key === 'ArrowUp') {
+    player.dy = -player.speed;
+  } else if (e.key === 'ArrowDown') {
+    player.dy = player.speed;
+  }
+}
+function keyUpHandler(e) {
+  if (['ArrowRight', 'ArrowLeft'].includes(e.key)) {
+    player.dx = 0;
+  }
+  if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
+    player.dy = 0;
+  }
+}
+document.addEventListener('keydown', keyDownHandler);
+document.addEventListener('keyup', keyUpHandler);
 
 // Start the game once the window has loaded
 window.onload = function () {
@@ -310,6 +320,6 @@ window.onload = function () {
 // Restart button listener
 restartButton.addEventListener('click', () => {
   initGame();
-  gameOverMessageDiv.innerHTML = '';
+  gameOverOverlay.style.display = 'none';
   update();
 });
